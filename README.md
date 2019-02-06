@@ -24,7 +24,7 @@ First, let's split the problem of censorship-resistant computing into parts:
 
 Here we address only the third matter. The first two matters can be addresses with many other existing initiatives, such as dark anonymous markets with escrow, cryptography technologies, zero-knowledge, distributed storage and data transfer (Torrent, IPFS etc.).
 
-The technical problem we need to address here is how to prove computational integrity (correctness of the actual computations) made by some non-trusted (anonymous) the third party without repeating the whole volume of the actual computing. This issue is usually addressed by use of Probabilistically Checkable Proofs (PCP) [], however, they leave untouched the question of coupling the payments for the consumed computational resources with the actual proof. Here we aim to utilize existing Bitcoin smart-contracts (Bitcoin script) functionality to be coupled with PCP proofs at the second layer on top of actual Bitcoin blockchain with just two on-chain transactions, reducing the footprint, price and increasing scalability for the real-world business cases for the computing. Furthermore, the solution can work on top of the recently proposed [Typhon sidechains](https://github.com/dr_orlovsky/typhon-spec) giving even better scalability without putting a single transaction on-chain for multi-contract computing cases.
+The technical problem we need to address here is how to prove computational integrity (correctness of the actual computations) made by some non-trusted (anonymous) the third party without repeating the whole volume of the actual computing. This issue is usually addressed by use of Probabilistically Checkable Proofs (PCP) [], however, they leave untouched the question of coupling the payments for the consumed computational resources with the actual proof. Here we aim to utilize existing Bitcoin smart-contracts (Bitcoin script) functionality to be coupled with PCP proofs at the second layer on top of actual Bitcoin blockchain with just two on-chain transactions, reducing the footprint, price and increasing scalability for the real-world business cases for the computing. Furthermore, the solution can work on top of the recently proposed [Typhon sidechains](https://github.com/dr-orlovsky/typhon-spec) giving even better scalability without putting a single transaction on-chain for multi-contract computing cases.
 
 Here we analyse parallelizable categories of high-load computing, including (but not limiting to) map-reduce tasks and inference on pre-trained machine learning models (training of machine learning models can be converted down to parallelizable case with existing federated learning solutions []).
 
@@ -53,7 +53,9 @@ For different computing models a step can be defined in such ways:
 * *Inference on pre-trained machine learning model*: each input for the model with the corresponding result produced by the model
 * *Training of machine learning model*: weights matrix for each step of the training
 
-Worker node performs actual computations and runs the following non-interactive PCP scheme: for each computing step (see definition below) the Worker has to compute the hash value (**commitment**). Commitments are merkelized into a tree. The hash of the Merkle tree root is used as a random oracle to sample some pre-agreed amount of the commitments. For each sampled commitment a proof is constructed, consisting of an index of the source computing step input, its resulting value and the Merkle path to the Merkle tree root. 
+Worker node performs actual computations and runs the following non-interactive PCP scheme (see Fig. 1): for each computing step (see definition below) the Worker has to compute the hash value (**commitment**). Commitments are merkelized into a tree. The hash of the Merkle tree root is used as a random oracle to sample some pre-agreed amount of the commitments. For each sampled commitment a proof is constructed, consisting of an index of the source computing step input, its resulting value and the Merkle path to the Merkle tree root. 
+
+[ ] Add PCP scheme figure @dr-orlovsky
 
 These data are sent by Worker node to Verifier together with unlocking transaction (see "Smart contract" below) signed by `W`. Verifier checks the proofs by (a) checking the random oracle and (b) repeating sampled computations against their proofs. If the results are correct, Verifiers signs the unlocking transaction with its private key (`V`) and passes it back to the Client node. If the results are incorrect, the Verifier notifies the Client node and does not sign the unlocking transaction.
 
@@ -127,14 +129,14 @@ Let `p` be the probability of cheating detection, `s` the standard payment
 for work and `c` the cost to produce the calculation.
 
 Let the standard collateral stake, lost when cheating is detected, be `w`
-for Worker node and `v` for Verifier node, where `v\geq w`.
+for Worker node and `v` for Verifier node, where `v \geq w`.
 
 In order for the network to operate, producing nearly perfect results in
 equilibrium, cheating must be unprofitable.
 
 ### Assumptions
 
-TBD
+[ ] TBD @sabina-sa
 
 ### Prevention of worker cheating
 *Collateral stake size vs probability of detection trade-off*
@@ -237,3 +239,12 @@ they both happen to belong to the same actor. But any actor large enough to
 benefit consistently from such a coincidence is a large enough player to
 have its incentives aligned with the network's success and would likely not
 undermine it by cheating.
+
+### Possible corruption scenarios
+
+[ ] TBD @sabina-sa
+
+References
+---
+
+[ ] TBD @dr-orlovsky @sabina-sa
