@@ -15,18 +15,18 @@ Maxim Orlovsky<sup>1, 2</sup>, Sabina Sachtachtinskagia<sup>1, 3</sup>
 Introduction
 ---
 
-The progress in the field of computing led to the appearance of cloud computing platforms. The success of the cloud computing was related to the economy of scale phenomenon, enhanced by the exponentially increasing abouts of produced data. However, it have created a systematic risks and fragility, namely privacy risks, possibilities of totalitarian control, surveillance, single points of failure and possibilities of censorship. It has put at risk the further development of machine learning technology, started to be monopolised together with the access to big data. [The #FreeAI Manifesto](https://manifesto.ai), had declared an initiative to oppose this dramatic trend, and this work aims at development of the technological stack able to address the issue.
+The progress in the field of computing led to the appearance of cloud computing platforms. The success of cloud computing was related to the economy of scale phenomenon, enhanced by the exponentially increasing amounts of produced data. However, it has created systematic risks and fragility, namely privacy risks, possibilities of totalitarian control, surveillance, single points of failure and possibilities of censorship. It has put at risk the further development of machine learning technology, started to be monopolised together with the access to big data. [The #FreeAI Manifesto](https://manifesto.ai), had declared an initiative to oppose this dramatic trend, and this work aims at the development of the technology stack, which can address the issue.
 
-First, let's split the problem of censorship-resistant computing in parts:
-1. Finding and buying information (big data, machine learning models) in censorship-resistant way
-2. Owning and keeping information (big data, machine learning models) private (with possible plausable deniability)
-3. Performing high-load computing on big data in anonymous and censorship-resistant and (desirable) private manner (for the cases when personal computing resources are not enough to perform the actual computation)
+First, let's split the problem of censorship-resistant computing into parts:
+1. Finding and buying information (big data, machine learning models) in a censorship-resistant way.
+2. Owning and keeping information (big data, machine learning models) private (with possible plausible deniability).
+3. Performing high-load computing on big data in anonymous and censorship-resistant and (desirable) private manner (for the cases when personal computing resources are not enough to perform the actual computation).
 
-Here we will address only the third matter. The first two matters can be addresses with many other existing initiative, such as dark anonymous markets with escrow, cryptography technologies, zero-knowledge, distributed storage and data transfer (Torrent, IPFS etc).
+Here we address only the third matter. The first two matters can be addresses with many other existing initiatives, such as dark anonymous markets with escrow, cryptography technologies, zero-knowledge, distributed storage and data transfer (Torrent, IPFS etc.).
 
-The technical problem we need to address here is how to prove computational integrity (correctness of the actual computations) made by some non-trusted (anonymous) third party without repeating the whole volume of the actual computing. This issue is usually addressed by use of Probabilistically Checkable Proofs (PCP) [], however they leave untouched the question of coupling the payments for the consumed computational resources with the actual prove. Here we aim to utilize existing Bitcoin smart-contracts (Bitcoin script) functionality to be coupled with PCP proofs at the second layer on top of actual Bitcoin blockchain with just two on-chain transactions, reducing the footprint, price and increasing scalability for the real-world business cases for the computing. Furthermore, the solution can work on top of the recently proposed [Typhon sidechains](https://github.com/dr_orlovsky/typhon-spec) giving even better scalability without putting a single transaction on-chain for multi-contract computing cases.
+The technical problem we need to address here is how to prove computational integrity (correctness of the actual computations) made by some non-trusted (anonymous) the third party without repeating the whole volume of the actual computing. This issue is usually addressed by use of Probabilistically Checkable Proofs (PCP) [], however, they leave untouched the question of coupling the payments for the consumed computational resources with the actual proof. Here we aim to utilize existing Bitcoin smart-contracts (Bitcoin script) functionality to be coupled with PCP proofs at the second layer on top of actual Bitcoin blockchain with just two on-chain transactions, reducing the footprint, price and increasing scalability for the real-world business cases for the computing. Furthermore, the solution can work on top of the recently proposed [Typhon sidechains](https://github.com/dr_orlovsky/typhon-spec) giving even better scalability without putting a single transaction on-chain for multi-contract computing cases.
 
-Here we will analyse parallelizable categories of high-load computing, including (but not limiting to) map-reduce tasks and inference on pre-trained machine learning models (training of machine learning models can be converted down to parallelizable case with existing federated learning solutions []).
+Here we analyse parallelizable categories of high-load computing, including (but not limiting to) map-reduce tasks and inference on pre-trained machine learning models (training of machine learning models can be converted down to parallelizable case with existing federated learning solutions []).
 
 Protocol
 ---
@@ -38,9 +38,9 @@ Participants:
 - Worker node `W`: party prepared to perform actual computing for some reward `s`.
 - Verifier node `V`: party prepared to verify the actual computing using PCP for some reward `s / z << s`
 
-The actual computing task is split by the client node into *batches* suitable for parallel processing in a distributed P2P network.
+The client node splits the actual computing task into *batches* suitable for parallel processing in a distributed P2P network.
 
-For each batch, the client selects Client and Verifier nodes on some open market or by an auction (the actual selection is not part of this protocol). They agree upon the price of the computing and stakes (see below) in a process of off-chain P2P communications. 
+For each batch, the client selects Client and Verifier nodes on some open market or by auction (the actual selection is not part of this protocol). They agree upon the price of the computing and stakes (see below) in the process of off-chain P2P communications. 
 
 To secure the actual computing Worker and Validator node prepare payments with stakes `w` and `v` correspondingly. All three parties secure costs `s+w+v` under special contract on the Bitcoin blockchain (see section "Smart Contract" below for the contract details) and wait for a necessary number of confirmations (up to their agreement).
 
@@ -49,11 +49,11 @@ To secure the actual computing Worker and Validator node prepare payments with s
 The Worker node receives all necessary data from the client (via p2p channel or by other means, like IPFS) and performs the actual batch of computing with the data after splitting them into a separate **computing steps**. 
 
 For different computing models a step can be defined in such ways:
-* *Map-reduce*: snapshot of input data with corresponding result for each `map` and `reduce` functions call
-* *Inference on pre-trained machine learning model*: each input for the model with corresponding result produced by the model
+* *Map-reduce*: a snapshot of input data with the corresponding result for each `map` and `reduce` functions call
+* *Inference on pre-trained machine learning model*: each input for the model with the corresponding result produced by the model
 * *Training of machine learning model*: weights matrix for each step of the training
 
-Worker node performs actual computations and runs the following non-interactive PCP scheme: for each computing step (see definition below) the Worker has to compute hash value (**commitment**). Commitments are merkelized into a tree. The hash of the Merkle tree root is used as a random oracle to sample some pre-agreed amount of the commitments. For each sampled commitment a proof is constructed, consisting of an index of the source computing step input, its resulting value and the Merkle path to the Merkle tree root. 
+Worker node performs actual computations and runs the following non-interactive PCP scheme: for each computing step (see definition below) the Worker has to compute the hash value (**commitment**). Commitments are merkelized into a tree. The hash of the Merkle tree root is used as a random oracle to sample some pre-agreed amount of the commitments. For each sampled commitment a proof is constructed, consisting of an index of the source computing step input, its resulting value and the Merkle path to the Merkle tree root. 
 
 These data are sent by Worker node to Verifier together with unlocking transaction (see "Smart contract" below) signed by `W`. Verifier checks the proofs by (a) checking the random oracle and (b) repeating sampled computations against their proofs. If the results are correct, Verifiers signs the unlocking transaction with its private key (`V`) and passes it back to the Client node. If the results are incorrect, the Verifier notifies the Client node and does not sign the unlocking transaction.
 
@@ -64,7 +64,7 @@ Smart contract
 
 ### Payment settlement schemes
 
-There are 8 possible combinations of the Worker, Verifier and Client node signatures on the unlocking transaction:(`2^3=8`), out of which 3 are nonsense/invalid (since they include either Client of Verifier signature, which does not make economic sense: there is no reason to pay if the actual computations was not made). Thus, the unlocking script of the Prometheus-type smart contract defines 5 scenarios with corresponding rewards:
+There are 8 possible combinations of the Worker, Verifier and Client node signatures on the unlocking transaction:(`2^3=8`), out of which 3 are nonsense/invalid (since they include either Client of Verifier signature, which does not make economic sense: there is no reason to pay if the actual computations were not made). Thus, the unlocking script of the Prometheus-type smart contract defines 5 scenarios with corresponding rewards:
 
 Scenario               | Signatures | W txout | V txout | C txout | Script type
 ---------------------- |:----------:|:-------:|:-------:|:-------:| -----------
