@@ -227,7 +227,7 @@ proxy for maximum `c`. Therefore, the rule of thumb becomes `w \geq \frac{s}{p%
 
 The probability of detection `p` is independent of the number of Verifiers
 that work on a task; it depends only on the percentage of work
-re-calculated. Any additional Verifier that repeats calculations increses
+re-calculated. Any additional Verifier that repeats calculations increases
 the customer's cost sharply. However, increase in the number of Verifiers
 could potentially help to prevent collusion between the Worker and the
 Verifier (two Verifiers would be sufficient to create a Prisoner's Dilemma).
@@ -243,7 +243,7 @@ spend for facilitation of collusion. The Worker's maximum gain from getting
 paid without procuring any cost is `s`. However, the gain of
 Verifier from reporting the Worker's results as faulty is `w` (the
 confiscated worker stake), where `w > s`. In addition, as long as `v > w`, it is
-easy to setup bounty programs there Worker could benefit from luring the
+easy to setup bounty programs where Worker could benefit from luring the
 Verifier to collusion (by sacrificing `w)` and then reporting him to the
 customer's arbitration to gain `v`. The Prisoner's dilemma already exists
 between the Worker and the Verifier, without the need for a second Verifier.
