@@ -45,7 +45,7 @@ For each batch, the client selects Client and Verifier nodes on some open market
 
 To secure the actual computing Worker and Validator node prepare payments with stakes `w` and `v` correspondingly. All three parties secure costs `s+w+v` under special contract on the Bitcoin blockchain (see section "Smart Contract" below for the contract details) and wait for a necessary number of confirmations (up to their agreement).
 
-### Contract execution
+### Protocol workflow
 
 The Worker node receives all necessary data from the client (via p2p channel or by other means, like IPFS) and performs the actual batch of computing with the data after splitting them into a separate **computing steps**. 
 
@@ -58,83 +58,25 @@ Worker node performs actual computations and runs the following non-interactive 
 
 [ ] Add PCP scheme figure @dr-orlovsky
 
-These data are sent by Worker node to Verifier together with unlocking transaction (see "Smart contract" below) signed by `W`. Verifier checks the proofs by (a) checking the random oracle and (b) repeating sampled computations against their proofs. If the results are correct, Verifiers signs the unlocking transaction with its private key (`V`) and passes it back to the Client node. If the results are incorrect, the Verifier notifies the Client node and does not sign the unlocking transaction.
+These data are sent by Worker node to Verifier. Verifier checks the proofs by (a) checking the random oracle and (b) repeating sampled computations against their proofs – and returns **verdict** on their correctness back the the Client node.
 
-The Worker has the right not to sign the received unlocking transaction if he is not satisfied with the results of computation by any reason (the protocol still be secure if it works under assumptions provided in "Economic incentives" section below). If the Worker decides to sign the transaction, he sends it over to the Bitcoin network to settle the payments.
+The Worker has the right to re-check the computations and not to sing the payment transaction if he is not satisfied with the results of computation by any reason (the protocol still be secure if it works under assumptions provided in "Economic incentives" section below). If the Worker decides to sign the transaction, he sends it over to the Bitcoin network to settle the payments.
 
-Smart contract
----
+![](uml/sequence-normal.svg)
 
-### Payment settlement schemes
+### Settlement schemes
 
-There are 8 possible combinations of the Worker, Verifier and Client node signatures on the unlocking transaction:(`2^3=8`), out of which 3 are nonsense/invalid (since they include either Client of Verifier signature, which does not make economic sense: there is no reason to pay if the actual computations were not made). Thus, the unlocking script of the Prometheus-type smart contract defines 5 scenarios with corresponding rewards:
+Scenario               | Confirmations | Results obtained by Client | Who pays whom
+---------------------- |:-------------:|:--------------------------:| ---------------------
+Worker unresponsive    | none          | none                       | no payments happens
+Everything is correct  | W+V+C         | correct                    | C->W:s, C->V:q
+Client finds mistake   | W+V           | none                       | W->miners:w, V->miners:v
+Faulty Verifier        | W+C           | correct                    | C->W:s, V->miners:v
+Faulty Worker          | W             | incorrect                  | C->V:q, W->V:w
 
-Scenario               | Signatures | W txout | V txout | C txout | Script branch
----------------------- |:----------:|:-------:|:-------:|:-------:| -----------
-Worker unresponsive    | none       |         |         |         | CLTV return of funds to `C`
-Everything correct     | W+V+C      | s+w     | s/z+v   | 0       | 3/3 multisig
-Client declined to pay | W+V        | w+x%    | v       | s-x%    | 2/2 multisig
-Faulty Verifier        | W+C        | s+w     | 0       | 0       | 2/2 multisig
-Faulty Worker          | W          | 0       | v+w+s/z | 0       | 1/1 multisig
+![](uml/workflow.svg)
 
-### Contract script
-
-Let :
-- `W` be a signature of a worker with stake `w`, 
-- `V` be a signature of a verifier with stake `v`, 
-- `C` be a signature of client,
-- `s` the agreed payment from the client for a successful contract execution,
-- `t` be an agreed maximum time for the contract execution.
-
-All the stakes (`w+v`) and client payment (`s`) are deposed as tree *txins* with a single *txout*, locked with P2SH script.
-
-Transaction script for hashing into `ScriptPubKey`:
-```
--- Branch for 3/3 multisig: everything is correct
-OP_DEPTH
-<3>
-OP_VERIFY
-OP_IF
-    OP_DROP2
-    3 <W> <V> <C> 3
-    OP_CHECKMULTISIG
-
--- Ok, something went wrong:
-OP_ELSE
-
--- Branches for 2/2 multisigs
-    OP_DROP
-    <2>
-    OP_VERIFY
-    OP_IF
-        OP_DROP2
-        
--- "Client declined to pay" case (W+V multisig)
-        2 <W> <V> 2
-        OP_CHECKMULTISIG
-        
--- "Faulty Verifier" case (W+C multisig)
-        OP_NOTIF
-            2 <W> <S> 2
-            OP_CHECKMULTISIG
-        OP_END
-
--- Branch for "Faulty Worker" case: 1-of-1 Worker multisig
-    OP_ELSE
-        OP_DROP2
-        1 <W> 1
-        OP_CHECKMULTISIG
-        
--- Branch for "Worker unresponsive" case: CLTV return of funds to `C`
-        OP_NOTIF
-            1 <C> 1
-            OP_CHECKMULTISIG
-            <t>
-            OP_CHECKLOCKTIMEVERIFY
-        OP_END
-    OP_END    
-OP_END
-```
+[ ] Describe non-cooperative scenarios
 
 Aligning of economic incentives
 ---

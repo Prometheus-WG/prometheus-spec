@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant C as Client
+  participant W as Worker
+  participant V as Verifier
+  participant B as Bitcoin Blockchain
+
+  C ->> W: data
+  activate W
+  W ->> W: compute
+  W ->> V: results with proofs
+  deactivate W
+  activate V
+  V ->> V: verify
+  V ->> C: verdict
+  deactivate V
+  W ->> C: encrypted data & H(secret)
+  C ->> B: payment Tx with H(secret)
+  W ->> B: spend TxOut revealing secret
+  B ->> C: secret
+  activate C
+  C ->> C: unencrypting data
+  deactivate C

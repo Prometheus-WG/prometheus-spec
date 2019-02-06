@@ -1,0 +1,10 @@
+graph TD
+W{Worker: results?}
+W-->|yes|V{Verifier: are valid?}
+W-->|no|C1((Penalty to W))
+V-->|yes|C2[Payments to W & V]
+V-->|no|C{Client: agrees?}
+C-->|yes|C3((Payment to V, penalty to W))
+C-->|no|C4[Payment to W, penalty to V]
+C2-->R((C: Obtains results))
+C4-->R
