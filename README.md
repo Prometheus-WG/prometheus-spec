@@ -11,7 +11,7 @@ Maxim Orlovsky<sup>1, 2</sup>, Sabina Sachtachtinskagia<sup>1, 3</sup>
 <sup>2</sup>BICA Labs, Switzerland;  
 <sup>3</sup>Athens University of Economics and Business, Greece
 
-![Prometheus Logo](assets/prometheus.svg)
+![Prometheus Logo](assets/prometheus.png)
 
 Introduction
 ---
