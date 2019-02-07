@@ -150,7 +150,11 @@ equilibrium, cheating must be unprofitable.
 
 ### Assumptions
 
-[ ] TBD @sabina-sa
+1. Client wants to pay only if payment is required in order to receive correct calculations
+2. Client does not want to pay to receive faulty or missing calculations
+3. Worker wants to spend resources to do correct calculations only if its payment is more than the costs incurred
+4. Worker may not want to spend resources to do correct calculations, if there is a possibility to get paid for faulty or missing calculations.
+
 
 ### Prevention of worker cheating
 *Collateral stake size vs probability of detection trade-off*
