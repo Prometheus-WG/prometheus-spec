@@ -1,3 +1,6 @@
+Game Model
+===
+
 The game is as follows
 
 There are 3 initial parties: Client (C), Worker (W), Verifier (V)
@@ -97,3 +100,139 @@ Arbitration is done with as many (random) Arbiters as possible. The limitation t
 One option is that Arbiters decide the outcome of Arbitration by simple majority, in that case they should be an odd number. Another alternative option is to design incentives for Arbiters, to discourage corruption, making it unprofitable. For example, if 70% of Arbiters agree on any outcome, then they are rewarded and those Arbiters that do not agree are seriously punished by stake cut. If less than 70% Arbiters agree on any outcome (i.e. the agreement rate is between 50% and 70%), then the totality of Arbiters is slightly punished and this money is used to re-do the Work anew or to refund the Client (while W, V get their stakes back untouched).
 
 Also, it is worth noting that when Arbitration starts, most previous choices of C, W, V become irrelevant, e.g. who initiated the Arbitration and on what grounds is irrelevant; the Arbitration is a greenfield approach.
+
+
+Aligning of economic incentives
+===
+
+Let `p` be the probability of cheating detection, `s` the standard payment
+for work and `c` the cost to produce the calculation.
+
+Let the standard collateral stake, lost when cheating is detected, be `w`
+for Worker node and `v` for Verifier node, where `v \geq w`.
+
+In order for the network to operate, producing nearly perfect results in
+equilibrium, cheating must be unprofitable.
+
+Assumptions
+---
+
+1. Client wants to pay only if payment is required in order to receive correct calculations
+2. Client does not want to pay to receive faulty or missing calculations
+3. Worker wants to spend resources to do correct calculations only if its payment is more than the costs incurred
+4. Worker may not want to spend resources to do correct calculations, if there is a possibility to get paid for faulty or missing calculations.
+
+
+Prevention of worker cheating
+---
+*Collateral stake size vs probability of detection trade-off*
+
+Let's calculate the expected profits from cheating. The payoffs for each
+world condition are given in the following Table.
+
+Decision to cheat | Payoff
+----------------- |:------:
+True node | `s-c`
+False node (undetected) | `s`
+False node (detected) | `-w`
+
+The expected payoff when not cheating is `s-c`, i.e. standard payment for
+the assignment, minus the incurred cost.
+
+The expected payoff when cheating depends on the probability of detection `p`%
+. Hence it is `(1-p)s+p(-w)`, i.e. the expectation of standard payment `s`
+without any doing work minus the expectation to lose one's stake collateral
+deposit `w`.
+
+Hence the expected payoff for the strategy 1 is as follows:
+
+Decision to cheat | Expected payoff
+----------------- |:---------------:
+True node | `s-c`
+False node, dissolve if detected | `(1-p)s+p(-w)`
+
+Therefore, cheating is not profitable when `s-c>(1-p)s+p(-w) \Longrightarrow
+p(s+w)>c`
+
+Observe that the result depends on all four parameters. It depends
+positively on the probability of detection `p`, the standard payment `s` and
+the stake `w`; it depends adversely on the cost of calculations `c`.
+
+In order to quantify the above results, we need to make reasonable
+assumptions about the relation between payment `s` and cost `c`. This
+depends on the "markup" (profit margin) `\frac{s-c}{c}`. If `\frac{s-c}{c}=0`
+then this markup is 0\%, therefore, `s=c`. If `\frac{s-c}{c}=1` then this
+markup is 100\%, therefore `s=2c`.
+
+The Table below uses the formula `p(s+w)>c` and shows how high the stake `w`
+need to be, relative to calculation cost `c`, in order to deter cheating.
+
+ `p` | `\frac{s-c}{c}` | `w`
+:---:|:---------------:| ---:
+`0.02` | `0` | `49c`
+`0.02` | `1` | `48c`
+`0.05` | `0` | `19c`
+`0.05` | `1` | `18c`
+`0.1` | `0` | `9c`
+`0.1` | `1` | `8c`
+`0.2` | `0` | `4c`
+`0.2` | `1` | `3c`
+
+Therefore we find that e.g. a combination of Worker stake `w=9c` and
+repetition of calculations (i.e. probability of detection) `p=10\%` would be
+sufficient to make cheating unprofitable, regardless the markup level.
+
+Note that the results are not very sensitive to a change in the markup.
+Instead, they are quite sensitive to a change in probability of detection `p`%. 
+This is because the biggest impact on incentives comes from losing the
+collateral stake rather that from losing the payment for work. Hence a
+simplified, practical rule of thump `w \geq \frac{c}{p}` could be used. The
+tradeoff is between increasing the probability of detection `p` by costly
+repetition of calculations, versus having too high a stake that workers
+cannot afford.
+
+If `c` is unobservable on the market, we can logically assume that `c\leq s`
+(otherwise the worker would operate at loss) and therefore we can use `s` as
+proxy for maximum `c`. Therefore, the rule of thumb becomes `w \geq \frac{s}{p%
+}`.
+
+Prevention of Verifier(s) cheating
+---
+
+The probability of detection `p` is independent of the number of Verifiers
+that work on a task; it depends only on the percentage of work
+re-calculated. Any additional Verifier that repeats calculations increases
+the customer's cost sharply. However, increase in the number of Verifiers
+could potentially help to prevent collusion between the Worker and the
+Verifier (two Verifiers would be sufficient to create a Prisoner's Dilemma).
+Collusion can happen if the Worker could communicate to the Verifier the
+result that the Worker intends to send to the network. Knowing that result
+(and assuming that the Verifier believes the Worker's declaration), the
+Verifier could send the same result without doing the calculations. 
+
+Since we cannot predict the futuristic technologies that can facilitate collusion
+(like smart contracts and automated prediction markets), it is easier to
+approach the problem by calculating the budget that the Worker node has to
+spend for facilitation of collusion. The Worker's maximum gain from getting
+paid without procuring any cost is `s`. However, the gain of
+Verifier from reporting the Worker's results as faulty is `w` (the
+confiscated worker stake), where `w > s`. In addition, as long as `v > w`, it is
+easy to setup bounty programs where Worker could benefit from luring the
+Verifier to collusion (by sacrificing `w)` and then reporting him to the
+customer's arbitration to gain `v`. The Prisoner's dilemma already exists
+between the Worker and the Verifier, without the need for a second Verifier.
+Hence a rational Verifier will not collude with the Worker, unless of course
+they both happen to belong to the same actor. But any actor large enough to
+benefit consistently from such a coincidence is a large enough player to
+have its incentives aligned with the network's success and would likely not
+undermine it by cheating.
+
+Possible corruption scenarios
+---
+
+[ ] TBD @sabina-sa
+
+References
+===
+
+[ ] TBD @dr-orlovsky @sabina-sa
