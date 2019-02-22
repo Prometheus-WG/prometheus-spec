@@ -29,7 +29,7 @@ The technical problem we need to address here is how to prove computational inte
 
 Here we analyse parallelizable categories of high-load computing, including (but not limiting to) map-reduce tasks and inference on pre-trained machine learning models (training of machine learning models can be converted down to parallelizable case with existing federated learning solutions []).
 
-This document consists of three main parts:
+This document consists of the following parts:
 1. [Description of game model in terms of game theory](./GameModel.md) – *nearly complete*
 2. [Overall protocol design for implementation of the developed game model](./Protocol.md) – *outdated, will be updated soon basing on a new game model developments*
 3. [Implementation of protocol using Bitcoin-script based smart contracts and state channels](./SmartContracts.md) – *outdated, will be updated soon basing on a new game model developments*
