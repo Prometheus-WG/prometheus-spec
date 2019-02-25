@@ -1,10 +1,7 @@
 Prometheus
 ===
 
-**_Censorship-resistant trustless protocol for high-load computing & machine learning on top of Bitcoin smart contracts_**
-
-
-*Working Draft*
+**_Scalable High-load Computing & Machine Learning on top of Bitcoin_**
 
 Maxim Orlovsky<sup>1, 2</sup>, Sabina Sachtachtinskagia<sup>1, 3</sup>  
 <sup>1</sup>Pandora Core AG, Switzerland;  
@@ -13,25 +10,6 @@ Maxim Orlovsky<sup>1, 2</sup>, Sabina Sachtachtinskagia<sup>1, 3</sup>
 
 ![Prometheus Logo](assets/prometheus.svg)
 
-Introduction
----
+Censorship resistant decentralised computing is a new topic in distributed systems theory. With the recent rise in popularity of Bitcoin as a censorship-resistant financial and transactional system a new technological field of blockchain and its applications appeared. This work addresses the problem of computational integrity proofs (correctness of the actual computations) made by some non-trusted (anonymous) third party without repeating the whole volume of the actual computing. The issue is usually addressed by use of probabilistically checkable proofs (PCP), however, such simple approach leave untouched the question of coupling the payments for the consumed computational resources with the actual proof. The purpose of our protocol is to scale distributed calculations by obtaining results of nearly perfect (measurable) quality, without the need to repeat calculations or check the computational integrity proofs by the client. This is achieved by providing meritocratic economic incentives to all participating economic agents, so that their interests are aligned with the network's success. As a result, the need for repeat calculations diminishes, and costs of calculations become lower and competitive. Ability to run PCP schemes without trusted checking party provides a way to codify the actual protocol in terms of smart contracts, so it can be used in a very compact form with existing economic blockchain layer. Our approach to protocol design aims at the smallest possible size of the shared system state so it can be implemented with any non-Turing complete smart contract system with storing nothing else then the account balances for the involved parties. For example, the protocol can be implemented with the existing Bitcoin script functionality with only two on-chain transactions per whole protocol computing cycle. In such system the PCP proofs are run the second layer on top of actual Bitcoin blockchain, reducing the footprint, price and increasing scalability for the real-world business cases for the computing.
 
-The progress in the field of computing led to the appearance of cloud computing platforms. The success of cloud computing was related to the economy of scale phenomenon, enhanced by the exponentially increasing amounts of produced data. However, it has created systematic risks and fragility, namely privacy risks, possibilities of totalitarian control, surveillance, single points of failure and possibilities of censorship. It has put at risk the further development of machine learning technology, started to be monopolised together with the access to big data. [The #FreeAI Manifesto](https://manifesto.ai), had declared an initiative to oppose this dramatic trend, and this work aims at the development of the technology stack, which can address the issue.
-
-First, let's split the problem of censorship-resistant computing into parts:
-1. Finding and buying information (big data, machine learning models) in a censorship-resistant way.
-2. Owning and keeping information (big data, machine learning models) private (with possible plausible deniability).
-3. Performing high-load computing on big data in anonymous and censorship-resistant and (desirable) private manner (for the cases when personal computing resources are not enough to perform the actual computation).
-
-Here we address only the third matter. The first two matters can be addresses with many other existing initiatives, such as dark anonymous markets with escrow, cryptography technologies, zero-knowledge, distributed storage and data transfer (Torrent, IPFS etc.).
-
-The technical problem we need to address here is how to prove computational integrity (correctness of the actual computations) made by some non-trusted (anonymous) the third party without repeating the whole volume of the actual computing. This issue is usually addressed by use of Probabilistically Checkable Proofs (PCP) [], however, they leave untouched the question of coupling the payments for the consumed computational resources with the actual proof. Here we aim to utilize existing Bitcoin smart-contracts (Bitcoin script) functionality to be coupled with PCP proofs at the second layer on top of actual Bitcoin blockchain with just two on-chain transactions, reducing the footprint, price and increasing scalability for the real-world business cases for the computing. Furthermore, the solution can work on top of the recently proposed [Typhon sidechains](https://github.com/dr-orlovsky/typhon-spec) giving even better scalability without putting a single transaction on-chain for multi-contract computing cases.
-
-Here we analyse parallelizable categories of high-load computing, including (but not limiting to) map-reduce tasks and inference on pre-trained machine learning models (training of machine learning models can be converted down to parallelizable case with existing federated learning solutions []).
-
-This document consists of the following parts:
-1. [Description of game model in terms of game theory](./GameModel.md) – *nearly complete*
-2. [Overall protocol design for implementation of the developed game model](./Protocol.md) – *outdated, will be updated soon basing on a new game model developments*
-3. [Implementation of protocol using Bitcoin-script based smart contracts and state channels](./SmartContracts.md) – *outdated, will be updated soon basing on a new game model developments*
-4. [Wire protocol for peer-to-peer communications for running state channels](./WireProtocol.md) – *not ready yet*
-5. [Solutions to a specific problems in implementing particular machine learning algorithms](./Issues.md) – *not ready yet*
+[Check the full PDF version of the paper](./prometheus.pdf)
